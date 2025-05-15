@@ -10,7 +10,8 @@ const createRequest = async (options = {}) => {
         const fetchOptions = {
             method,
             headers: {
-                'Content-Type': 'application/json', ...headers
+                'Content-Type': 'application/json',
+                ...headers
             },
         }
 
