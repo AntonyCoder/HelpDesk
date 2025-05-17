@@ -1,0 +1,46 @@
+.ticket-wrapper{
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    border: 1px solid #000000;
+    border-radius: 10px;
+
+    padding: 10px;
+    margin: 10px;
+}
+
+.left-block, .right-block{
+    display: flex;
+    align-items: center;
+}
+
+.left-block{
+    width: 70%;
+}
+
+.right-block{
+    width: 30%;
+    justify-content: space-between;
+}
+
+.done-button, .update-button, .delete-button {
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #000000;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 25px;
+    flex-shrink: 0;
+}
+
+.done-button {
+    margin-right: 20px;
+}
+
+
+
+

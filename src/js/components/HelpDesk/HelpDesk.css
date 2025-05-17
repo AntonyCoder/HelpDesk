@@ -1,0 +1,17 @@
+.container {
+    width: 80%;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.add-ticket-button {
+    align-self: end;
+    margin-bottom: 30px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    user-select: none;
+}

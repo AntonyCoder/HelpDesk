@@ -1,15 +1,31 @@
+import createRequest from "./api/createRequest"
+
 /**
  *  Класс для связи с сервером.
  *  Содержит методы для отправки запросов на сервер и получения ответов
  * */
 export default class TicketService {
-  list(callback) {}
+  constructor(baseUrl) {
+    this.baseUrl = baseUrl
+  }
 
-  get(id, callback) {}
+  async list() {
+    try {
+      const response = await createRequest({
+        url: `${this.baseUrl}?method=allTickets`
+      })
 
-  create(data, callback) {}
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-  update(id, data, callback) {}
+  get(id, callback) { }
 
-  delete(id, callback) {}
+  create(data, callback) { }
+
+  update(id, data, callback) { }
+
+  delete(id, callback) { }
 }

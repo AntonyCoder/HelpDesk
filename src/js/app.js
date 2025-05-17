@@ -1,17 +1,10 @@
-import HelpDesk from './HelpDesk';
+import HelpDesk from './components/HelpDesk/HelpDesk';
 import TicketService from './TicketService';
-import createRequest from './api/createRequest';
 
+const baseUrl = 'http://localhost:3000/'
 const root = document.getElementById('root');
 
-const ticketService = new TicketService();
+const ticketService = new TicketService(baseUrl);
 const app = new HelpDesk(root, ticketService);
 
 app.init();
-
-
-const response = createRequest({
-    url: 'http://localhost:3000/?method=allTickets'
-})
-
-console.log(response);
