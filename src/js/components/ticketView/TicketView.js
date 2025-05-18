@@ -2,16 +2,31 @@
  *  Класс для отображения тикетов на странице.
  *  Он содержит методы для генерации разметки тикета.
  * */
+import TicketService from '../../TicketService';
+import { baseUrl } from '../../app';
 import './TicketView.css'
 
 export default class TicketView {
+  constructor(tickets, helpDeskInstance) {
+    this.ticketService = new TicketService(baseUrl)
+    this.tickets = tickets;
+    this.helpDesk = helpDeskInstance;
+
+    this.onDoneButton = this.onDoneButton.bind(this);
+    this.onUpdateButton = this.onUpdateButton.bind(this);
+    this.onDeleteButton = this.onDeleteButton.bind(this);
+    this.sendDeleteRequest = this.sendDeleteRequest.bind(this);
+    this.closeDeleteBlock = this.closeDeleteBlock.bind(this);
+  }
 
   //Отрисовка тикетов
-  renderTicket(name, created, status){
+  renderTicket(name, created, status, id) {
     const currentDate = new Date(created).toLocaleString();
     //Блок тикета
     const ticketWrapper = document.createElement('li');
     ticketWrapper.classList.add('ticket-wrapper');
+    ticketWrapper.setAttribute('data-id', id);
+    ticketWrapper.setAttribute('data-status', status);
 
     //Левый блок тикета
     const leftBlock = document.createElement('div');
@@ -25,7 +40,7 @@ export default class TicketView {
     const doneButton = document.createElement('a');
     doneButton.classList.add('done-button');
 
-    if(status){
+    if (status) {
       doneButton.textContent = 'V'
     }
 
@@ -44,7 +59,7 @@ export default class TicketView {
     //Кнопка для редактирования тикета
     const updateButton = document.createElement('a');
     updateButton.classList.add('update-button');
-    updateButton.textContent ='✎';
+    updateButton.textContent = '✎';
 
     //Кнопка для удаления тикета
     const deleteButton = document.createElement('a');
@@ -55,7 +70,99 @@ export default class TicketView {
 
     ticketWrapper.append(leftBlock, rightBlock);
 
-    return ticketWrapper;
+    doneButton.addEventListener('click', this.onDoneButton);
+    updateButton.addEventListener('click', this.onUpdateButton);
+    deleteButton.addEventListener('click', this.onDeleteButton);
 
+    return ticketWrapper;
   }
+
+  //Обработчик кнопки выполнения задачи
+  async onDoneButton(e) {
+    const ticket = e.target.closest('.ticket-wrapper');
+
+    const ticketId = ticket.getAttribute('data-id');
+    const status = (ticket.getAttribute('data-status') === 'true');
+
+    await this.ticketService.update(ticketId, { status: !status });
+    await this.helpDesk.renderTicketList();
+  }
+
+  //Обработчки кнопки изменения задачи
+  onUpdateButton(e) {
+    console.log(e.target);
+  }
+
+  //Обработчик кнопки удаления задачи
+  onDeleteButton(e) {
+    const deleteBlock = document.querySelector('.delete-block');
+    const container = document.querySelector('.container');
+    if (deleteBlock) return;
+
+    const ticket = e.target.closest('.ticket-wrapper');
+    const ticketId = ticket.getAttribute('data-id');
+
+    container.appendChild(this.renderDeleteModal(ticketId));
+  }
+
+  //Отрисовка модуального окна удаления тикета
+  renderDeleteModal(ticketId) {
+    const deleteBlock = document.createElement('div');
+    deleteBlock.classList.add('delete-block');
+    deleteBlock.setAttribute('data-id', ticketId)
+
+    const deleteBlockTitle = document.createElement('p');
+    deleteBlockTitle.classList.add('delete-block-title');
+    deleteBlockTitle.textContent = 'Удалить тикет';
+
+    const deleteBlockText = document.createElement('p');
+    deleteBlockText.classList.add('delete-block-text');
+    deleteBlockText.textContent = 'Вы уверены, что хотите удалить тикет? Это действие необратимо.'
+
+    //Блок с кнопками
+    const buttonBlock = document.createElement('div');
+    buttonBlock.classList.add('button-block');
+
+    //Кнопка отмены
+    const cancelBtn = document.createElement('a');
+    cancelBtn.classList.add('cancel-button');
+    cancelBtn.textContent = 'Отмена'
+
+    //Кнопка подтверждения
+    const approveBtn = document.createElement('a');
+    approveBtn.classList.add('approve-button');
+    approveBtn.textContent = 'Ок'
+
+    buttonBlock.append(cancelBtn, approveBtn);
+
+    deleteBlock.append(deleteBlockTitle, deleteBlockText, buttonBlock)
+
+    cancelBtn.addEventListener('click', this.closeDeleteBlock);
+    approveBtn.addEventListener('click', this.sendDeleteRequest)
+
+    return deleteBlock
+  }
+
+  //Закрытие окна удаления тикета
+  closeDeleteBlock() {
+    const deleteBlock = document.querySelector('.delete-block');
+    if (!deleteBlock) return;
+
+    deleteBlock.remove();
+  }
+  
+  //Отправка запроса на удаление тикета
+  async sendDeleteRequest(e) {
+    try {
+      const ticketId = e.target.closest('.delete-block').getAttribute('data-id');
+
+      await this.ticketService.delete(ticketId);
+      await this.helpDesk.renderTicketList();
+
+      this.closeDeleteBlock();
+    } catch (error) {
+      console.error('Что-то пошло не так при удалении тикета:', error.message);
+    }
+  }
+
 }

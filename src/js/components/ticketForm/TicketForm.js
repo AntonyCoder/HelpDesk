@@ -1,16 +1,24 @@
 /**
  *  Класс для создания формы создания нового тикета
  * */
+
+import TicketService from '../../TicketService';
+import { baseUrl } from '../../app';
+import './TicketForm.css'
+
 export default class TicketForm {
-  constructor() {
+  constructor(helpDeskInstance) {
+    this.helpDesk = helpDeskInstance
+    this.ticketService = new TicketService(baseUrl);
     this.deleteForm = this.deleteForm.bind(this);
+    this.sendForm = this.sendForm.bind(this);
   }
 
   //Отрисовка формы создания тикета
-  renderForm(){
+  renderForm() {
     const form = document.createElement('form');
     form.classList.add('form');
-    
+
     //Название формы
     const title = document.createElement('p');
     title.classList.add('title');
@@ -55,14 +63,37 @@ export default class TicketForm {
     form.append(title, shortDescriptionLabel, shortDescriptionInput, longDescriptionLabel, longDescriptionInput, buttonBlock);
 
     cancelBtn.addEventListener('click', this.deleteForm);
+    approveBtn.addEventListener('click', this.sendForm)
 
     return form;
   }
 
-  deleteForm(){
+
+  //Удаление формы добавления нового тикета
+  deleteForm() {
     const form = document.querySelector('.form');
-    if(!form) return;
+    if (!form) return;
 
     form.remove();
+  }
+
+  //Отправка формы на добавление нового тикета
+  async sendForm() {
+    const shortDescriptionInput = document.querySelector('.short-description-input');
+    const name = shortDescriptionInput.value;
+
+    const longDescriptionInput = document.querySelector('.long-description-input');
+    const description = longDescriptionInput.value;
+
+    try {
+      if (!name) return
+      await this.ticketService.create({ name: name, description: description });
+
+      this.deleteForm();
+
+      await this.helpDesk.renderTicketList();
+    } catch (error) {
+      console.error('Что-то пошло не так при создании тикета:', error.message);
+    }
   }
 }

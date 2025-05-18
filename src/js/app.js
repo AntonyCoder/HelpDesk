@@ -1,7 +1,7 @@
 import HelpDesk from './components/HelpDesk/HelpDesk';
 import TicketService from './TicketService';
 
-const baseUrl = 'http://localhost:3000/'
+export const baseUrl = 'http://localhost:3000/'
 const root = document.getElementById('root');
 
 const ticketService = new TicketService(baseUrl);

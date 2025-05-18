@@ -11,14 +11,16 @@ export default class HelpDesk {
     if (!(container instanceof HTMLElement)) {
       throw new Error('This is not HTML element!');
     }
-    this.ticketView = new TicketView();
+    this.tickets = [];
     this.container = container;
     this.ticketService = ticketService;
-    this.ticketForm = new TicketForm();
+
+    this.ticketForm = new TicketForm(this);
 
     this.onAddTicketBtn = this.onAddTicketBtn.bind(this);
   }
 
+  //Инициализация приложения
   init() {
     this.renderApp();
     this.renderTicketList();
@@ -48,20 +50,26 @@ export default class HelpDesk {
   //Отрисовка всех тикетов 
   async renderTicketList() {
     const ticketsList = document.querySelector('.tickets-list');
+    ticketsList.textContent = '';
 
     const dataFromServer = await this.ticketService.list();
     const tickets = dataFromServer.map(item => new Ticket(item));
-    console.log(tickets);
+    this.tickets = tickets
+
+    const ticketView = new TicketView(this.tickets, this);
     tickets.forEach(item => {
-      const ticket = this.ticketView.renderTicket(item.name, item.created, item.status);
+      const ticket = ticketView.renderTicket(item.name, item.created, item.status, item.id);
       ticketsList.appendChild(ticket);
     })
   }
 
+
+  //Обработчик события клика по кнопке Добавить тикет
   onAddTicketBtn() {
-    if(document.querySelector('.form')) return
+    if (document.querySelector('.form')) return;
     const form = this.ticketForm.renderForm();
 
     this.container.appendChild(form);
   }
+
 }

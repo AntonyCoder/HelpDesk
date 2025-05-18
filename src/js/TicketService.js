@@ -9,6 +9,7 @@ export default class TicketService {
     this.baseUrl = baseUrl
   }
 
+  //Получение всех тикетов
   async list() {
     try {
       const response = await createRequest({
@@ -21,11 +22,51 @@ export default class TicketService {
     }
   }
 
+  //Получение подробного описания тикета
   get(id, callback) { }
 
-  create(data, callback) { }
 
-  update(id, data, callback) { }
+  //Создание нового тикета
+  async create(data) {
+    try {
+      const response = await createRequest({
+        url: `${this.baseUrl}?method=createTicket`,
+        method: 'POST',
+        body: data,
+      })
 
-  delete(id, callback) { }
+      return response;
+    } catch (error) {
+      console.error(error)
+      throw error;
+    }
+  }
+
+  //Обновление тикета
+  async update(id, data) {
+    try {
+      await createRequest({
+        url: `${this.baseUrl}?method=updateById&id=${id}`,
+        method: 'POST',
+        body: data,
+      });
+
+    } catch (error) {
+      console.error(error)
+      throw error;
+    }
+  }
+
+  //Удаление тикета
+  async delete(id) {
+    try {
+      await createRequest({
+        url: `${this.baseUrl}?method=deleteById&id=${id}`,
+      })
+
+    } catch (error) {
+      console.error(error)
+      throw error;
+    }
+  }
 }

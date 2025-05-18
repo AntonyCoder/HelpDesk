@@ -26,6 +26,10 @@ const createRequest = async (options = {}) => {
             throw new Error(`Ошибка: ${response.status} ${response.statusText} \n ${JSON.stringify(errorData)}`);
         }
 
+        if (response.status === 204) {
+            return null;
+        }
+
         return await response.json();
     } catch (error) {
         console.error('Ошибка при выполнении запроса:', error);
