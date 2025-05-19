@@ -17,6 +17,7 @@ export default class TicketView {
     this.onDeleteButton = this.onDeleteButton.bind(this);
     this.sendDeleteRequest = this.sendDeleteRequest.bind(this);
     this.closeDeleteBlock = this.closeDeleteBlock.bind(this);
+    this.onTicketClick = this.onTicketClick.bind(this);
   }
 
   //Отрисовка тикетов
@@ -73,12 +74,14 @@ export default class TicketView {
     doneButton.addEventListener('click', this.onDoneButton);
     updateButton.addEventListener('click', this.onUpdateButton);
     deleteButton.addEventListener('click', this.onDeleteButton);
+    ticketWrapper.addEventListener('click', this.onTicketClick);
 
     return ticketWrapper;
   }
 
   //Обработчик кнопки выполнения задачи
   async onDoneButton(e) {
+    e.stopPropagation();
     const ticket = e.target.closest('.ticket-wrapper');
 
     const ticketId = ticket.getAttribute('data-id');
@@ -90,11 +93,13 @@ export default class TicketView {
 
   //Обработчки кнопки изменения задачи
   onUpdateButton(e) {
+    e.stopPropagation();
     console.log(e.target);
   }
 
   //Обработчик кнопки удаления задачи
   onDeleteButton(e) {
+    e.stopPropagation();
     const deleteBlock = document.querySelector('.delete-block');
     const container = document.querySelector('.container');
     if (deleteBlock) return;
@@ -105,7 +110,7 @@ export default class TicketView {
     container.appendChild(this.renderDeleteModal(ticketId));
   }
 
-  //Отрисовка модуального окна удаления тикета
+  //Отрисовка модального окна удаления тикета
   renderDeleteModal(ticketId) {
     const deleteBlock = document.createElement('div');
     deleteBlock.classList.add('delete-block');
@@ -150,7 +155,7 @@ export default class TicketView {
 
     deleteBlock.remove();
   }
-  
+
   //Отправка запроса на удаление тикета
   async sendDeleteRequest(e) {
     try {
@@ -163,6 +168,34 @@ export default class TicketView {
     } catch (error) {
       console.error('Что-то пошло не так при удалении тикета:', error.message);
     }
+  }
+
+  //Обработчик нажатия на тикет для раскрытия подробного описания
+  async onTicketClick(e) {
+    try {
+      const ticket = e.target.closest('.ticket-wrapper');
+      const openDescription = ticket.querySelector('.description');
+
+      if(openDescription){
+        openDescription.remove();
+        return
+      }
+
+      const ticketId = ticket.getAttribute('data-id');
+      const response = await this.ticketService.get(ticketId);
+
+      if(!response.description) return;
+      
+      const description = document.createElement('div');
+      description.classList.add('description');
+      description.textContent = response.description;
+
+      ticket.appendChild(description);
+
+    } catch (error) {
+      console.error(error);
+    }
+
   }
 
 }

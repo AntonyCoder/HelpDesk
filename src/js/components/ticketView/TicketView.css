@@ -1,6 +1,7 @@
-.ticket-wrapper{
+.ticket-wrapper {
     list-style-type: none;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     width: 100%;
@@ -10,23 +11,28 @@
 
     padding: 10px;
     margin: 10px;
+
+    cursor: pointer
 }
 
-.left-block, .right-block{
+.left-block,
+.right-block {
     display: flex;
     align-items: center;
 }
 
-.left-block{
+.left-block {
     width: 70%;
 }
 
-.right-block{
+.right-block {
     width: 30%;
     justify-content: space-between;
 }
 
-.done-button, .update-button, .delete-button {
+.done-button,
+.update-button,
+.delete-button {
     cursor: pointer;
     width: 25px;
     height: 25px;
@@ -57,15 +63,16 @@
     background-color: #fff;
 }
 
-.delete-block-title{
+.delete-block-title {
     align-self: center;
     margin-bottom: 15px;
 }
 
-.delete-block-text{
+.delete-block-text {
     margin-bottom: 15px;
 }
 
-
-
-
+.description {
+    margin-top: 15px;
+    margin-left: 45px;
+}

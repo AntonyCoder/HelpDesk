@@ -23,7 +23,18 @@ export default class TicketService {
   }
 
   //Получение подробного описания тикета
-  get(id, callback) { }
+  async get(id) {
+    try {
+      const response = await createRequest({
+        url: `${this.baseUrl}?method=ticketById&id=${id}`,
+      })
+
+      return response
+    } catch (error) {
+      console.error(error)
+      throw error;
+    }
+  }
 
 
   //Создание нового тикета
