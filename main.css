@@ -1,0 +1,141 @@
+* {
+    box-sizing: border-box;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    cursor: pointer
+}
+
+input:focus{
+    outline: none;
+}
+.form {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid #000000;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.title {
+    align-self: center;
+    margin-bottom: 20px;
+}
+
+.short-description-input, .long-description-input {
+    margin-bottom: 20px;
+}
+
+.button-block{
+    align-self: end;
+}
+
+.cancel-button{
+    margin-right: 25px;
+}
+.ticket-wrapper {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    border: 1px solid #000000;
+    border-radius: 10px;
+
+    padding: 10px;
+    margin: 10px;
+
+    cursor: pointer
+}
+
+.left-block,
+.right-block {
+    display: flex;
+    align-items: center;
+}
+
+.left-block {
+    width: 70%;
+}
+
+.right-block {
+    width: 30%;
+    justify-content: space-between;
+}
+
+.done-button,
+.update-button,
+.delete-button {
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #000000;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 25px;
+    flex-shrink: 0;
+}
+
+.done-button {
+    margin-right: 20px;
+}
+
+.delete-block {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid #000000;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.delete-block-title {
+    align-self: center;
+    margin-bottom: 15px;
+}
+
+.delete-block-text {
+    margin-bottom: 15px;
+}
+
+.description {
+    margin-top: 15px;
+    margin-left: 45px;
+}
+.container {
+    width: 80%;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.add-ticket-button {
+    align-self: end;
+    margin-bottom: 30px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    user-select: none;
+}
