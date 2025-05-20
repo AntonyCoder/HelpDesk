@@ -7,8 +7,4 @@ export default class Ticket {
     this.created = created;
   }
   
-  //Проверка на закрытый тикет
-  isClosed() {
-    this.status === true;
-  }
 }

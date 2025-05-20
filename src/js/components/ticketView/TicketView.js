@@ -4,14 +4,16 @@
  * */
 import TicketService from '../../TicketService';
 import { baseUrl } from '../../app';
+import { UpdateModal } from '../UpdateModal/UpdateModal';
 import './TicketView.css'
 
 export default class TicketView {
   constructor(tickets, helpDeskInstance) {
-    this.ticketService = new TicketService(baseUrl)
+    this.ticketService = new TicketService(baseUrl);
     this.tickets = tickets;
     this.helpDesk = helpDeskInstance;
-
+    
+    this.updateModal = new UpdateModal(this.helpDesk, this.ticketService);
     this.onDoneButton = this.onDoneButton.bind(this);
     this.onUpdateButton = this.onUpdateButton.bind(this);
     this.onDeleteButton = this.onDeleteButton.bind(this);
@@ -92,9 +94,18 @@ export default class TicketView {
   }
 
   //Обработчки кнопки изменения задачи
-  onUpdateButton(e) {
+  async onUpdateButton(e) {
     e.stopPropagation();
-    console.log(e.target);
+    if (document.querySelector('.form')) return;
+
+    const ticketId = e.target.closest('.ticket-wrapper').getAttribute('data-id');
+    const ticket = await this.ticketService.get(ticketId);
+    
+    const container = document.querySelector('.container');
+    const form = this.updateModal.renderForm(ticket);
+
+    container.appendChild(form);
+
   }
 
   //Обработчик кнопки удаления задачи
@@ -178,7 +189,7 @@ export default class TicketView {
 
       if(openDescription){
         openDescription.remove();
-        return
+        return;
       }
 
       const ticketId = ticket.getAttribute('data-id');
